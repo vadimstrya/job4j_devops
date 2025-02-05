@@ -19,15 +19,6 @@ class CalcControllerTest {
     }
 
     @Test
-    public void whenNegativeNumber() {
-        var input = new TwoArgs(-1, -1);
-        var expected = new Result(-2);
-        var output = new CalcController().summarise(input);
-        assertThat(output.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
-        assertThat(output.getBody()).isEqualTo(expected);
-    }
-
-    @Test
     public void whenZeroPlusZero() {
         var input = new TwoArgs(0, 3);
         var expected = new Result(3);
@@ -59,6 +50,15 @@ class CalcControllerTest {
         var input = new TwoArgs(-3, -3);
         var expected = new Result(9);
         var output = new CalcController().times(input);
+        assertThat(output.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
+        assertThat(output.getBody()).isEqualTo(expected);
+    }
+
+    @Test
+    public void whenNegativeNumber() {
+        var input = new TwoArgs(-1, -1);
+        var expected = new Result(-2);
+        var output = new CalcController().summarise(input);
         assertThat(output.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
         assertThat(output.getBody()).isEqualTo(expected);
     }
