@@ -37,13 +37,13 @@ repositories {
 }
 
 dependencies {
-	compileOnly("org.projectlombok:lombok:1.18.36")
-	annotationProcessor("org.projectlombok:lombok:1.18.36")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
-	testImplementation("org.assertj:assertj-core:3.24.2")
+	compileOnly(libs.lombok)
+	annotationProcessor(libs.lombok)
+    implementation(libs.org.springframework.boot.spring.boot.starter.web)
+    testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
+	testImplementation(libs.org.junit.jupiter.junit.jupiter)
+	testImplementation(libs.org.assertj.assertj.core)
+    testRuntimeOnly(libs.org.junit.platform.junit.platform.launcher)
 }
 
 tasks.withType<Test> {
