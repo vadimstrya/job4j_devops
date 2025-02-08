@@ -1,9 +1,9 @@
 plugins {
-	checkstyle
-	java
-	jacoco
-	id("org.springframework.boot") version "3.4.0"
-	id("io.spring.dependency-management") version "1.1.6"
+    checkstyle
+    java
+    jacoco
+    id("org.springframework.boot") version "3.4.0"
+    id("io.spring.dependency-management") version "1.1.6"
     id("com.github.spotbugs") version "6.0.26"
 }
 
@@ -33,21 +33,25 @@ tasks.jacocoTestCoverageVerification {
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	compileOnly(libs.lombok)
-	annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
+
+    annotationProcessor(libs.lombok)
+
     implementation(libs.org.springframework.boot.spring.boot.starter.web)
+
     testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
-	testImplementation(libs.org.junit.jupiter.junit.jupiter)
-	testImplementation(libs.org.assertj.assertj.core)
+    testImplementation(libs.org.junit.jupiter.junit.jupiter)
+    testImplementation(libs.org.assertj.assertj.core)
+
     testRuntimeOnly(libs.org.junit.platform.junit.platform.launcher)
 }
 
 tasks.withType<Test> {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 tasks.register<Zip>("zipJavaDoc") {
