@@ -42,6 +42,9 @@ dependencies {
     annotationProcessor(libs.lombok)
 
     implementation(libs.org.springframework.boot.spring.boot.starter.web)
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.liquibase:liquibase-core:4.30.0")
+    implementation("org.postgresql:postgresql:42.7.4")
 
     testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
     testImplementation(libs.org.junit.jupiter.junit.jupiter)
