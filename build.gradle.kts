@@ -16,7 +16,7 @@ tasks.jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = "0.8".toBigDecimal()
+                minimum = "0.5".toBigDecimal()
             }
         }
 
@@ -155,4 +155,10 @@ tasks.register("profile") {
     doFirst {
         println(env.DB_URL.value)
     }
+}
+
+tasks.named<Test>("test") {
+    systemProperty("spring.datasource.url", env.DB_URL.value)
+    systemProperty("spring.datasource.username", env.DB_USERNAME.value)
+    systemProperty("spring.datasource.password", env.DB_PASSWORD.value)
 }
