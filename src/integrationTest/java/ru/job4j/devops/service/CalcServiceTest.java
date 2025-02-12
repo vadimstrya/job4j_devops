@@ -1,4 +1,4 @@
-package ru.job4j.devops.repository;
+package ru.job4j.devops.service;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,7 +9,8 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import ru.job4j.devops.models.User;
-import ru.job4j.devops.service.CalcService;
+import ru.job4j.devops.repository.CalcEventRepository;
+import ru.job4j.devops.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
