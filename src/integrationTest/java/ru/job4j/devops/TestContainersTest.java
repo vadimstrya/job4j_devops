@@ -1,4 +1,4 @@
-package ru.job4.devops;
+package ru.job4j.devops;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
