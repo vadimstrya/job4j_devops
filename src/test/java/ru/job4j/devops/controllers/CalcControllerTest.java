@@ -55,6 +55,24 @@ class CalcControllerTest {
     }
 
     @Test
+    public void whenTimesNegatives2() {
+        var input = new TwoArgs(-3, -4);
+        var expected = new Result(12);
+        var output = new CalcController().times(input);
+        assertThat(output.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
+        assertThat(output.getBody()).isEqualTo(expected);
+    }
+
+    @Test
+    public void whenTimesNegatives3() {
+        var input = new TwoArgs(-3, -5);
+        var expected = new Result(15);
+        var output = new CalcController().times(input);
+        assertThat(output.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
+        assertThat(output.getBody()).isEqualTo(expected);
+    }
+
+    @Test
     public void whenNegativeNumber() {
         var input = new TwoArgs(-1, -1);
         var expected = new Result(-2);

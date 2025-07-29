@@ -1,4 +1,4 @@
-FROM gradle:8.11.1-jdk21
+FROM gradle:8.14.3-jdk21
 RUN mkdir job4j_devops
 WORKDIR /job4j_devops
 COPY . .
