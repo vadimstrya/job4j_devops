@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'agent1' }
+    agent { label 'agent2' }
 
     tools {
         git 'Default'
@@ -13,31 +13,17 @@ pipeline {
                 }
             }
         }
-        stage('Checkstyle Main') {
+        stage('Check') {
             steps {
                 script {
-                    sh './gradlew checkstyleMain'
+                    sh './gradlew check'
                 }
             }
         }
-        stage('Checkstyle Test') {
+        stage('Package') {
             steps {
                 script {
-                    sh './gradlew checkstyleTest'
-                }
-            }
-        }
-        stage('Compile') {
-            steps {
-                script {
-                    sh './gradlew compileJava'
-                }
-            }
-        }
-        stage('Test') {
-            steps {
-                script {
-                    sh './gradlew test'
+                    sh './gradlew build'
                 }
             }
         }
@@ -55,15 +41,24 @@ pipeline {
                 }
             }
         }
+        stage('Docker Build') {
+            steps {
+                script {
+                    sh 'docker build -t job4j_devops .'
+                }
+            }
+        }
     }
 
     post {
         always {
             script {
-                def buildInfo = "Build number: ${currentBuild.number}\n" +
-                                "Build status: ${currentBuild.currentResult}\n" +
-                                "Started at: ${new Date(currentBuild.startTimeInMillis)}\n" +
-                                "Duration so far: ${currentBuild.durationString}"
+                def buildInfo = """
+                    Build number: ${currentBuild.number}
+                    Build status: ${currentBuild.currentResult}
+                    Started at: ${new Date(currentBuild.startTimeInMillis)}
+                    Duration so far: ${currentBuild.durationString}
+                """
                 telegramSend(message: buildInfo)
             }
         }
