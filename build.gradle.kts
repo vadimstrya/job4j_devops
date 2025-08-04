@@ -6,32 +6,11 @@ plugins {
     id("io.spring.dependency-management") version "1.1.6"
     id("com.github.spotbugs") version "6.0.26"
     id("org.liquibase.gradle") version "3.0.1"
+    id("co.uzzu.dotenv.gradle") version "4.0.0"
 }
 
 group = "ru.job4j.devops"
 version = "1.0.0"
-
-tasks.jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                minimum = "0.8".toBigDecimal()
-            }
-        }
-
-        rule {
-            isEnabled = false
-            element = "CLASS"
-            includes = listOf("org.gradle.*")
-
-            limit {
-                counter = "LINE"
-                value = "TOTALCOUNT"
-                maximum = "0.3".toBigDecimal()
-            }
-        }
-    }
-}
 
 repositories {
     mavenCentral()
@@ -62,19 +41,53 @@ dependencies {
     liquibaseRuntime("info.picocli:picocli:4.6.1")
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.liquibase:liquibase-core:4.30.0")
+    }
 }
 
-tasks.register<Zip>("zipJavaDoc") {
-    group = "documentation" // Группа, в которой будет отображаться задача
-    description = "Packs the generated Javadoc into a zip archive"
+liquibase {
+    activities.register("main") {
+        this.arguments = mapOf(
+            "logLevel" to "info",
+            "url" to env.DB_URL.value,
+            "username" to env.DB_USERNAME.value,
+            "password" to env.DB_PASSWORD.value,
+            "classpath" to "src/main/resources",
+            "changelogFile" to "db/changelog/db.changelog-master.xml"
+        )
+    }
+    runList = "main"
+}
 
-    dependsOn("javadoc") // Указываем, что задача зависит от выполнения javadoc
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = "0.8".toBigDecimal()
+            }
+        }
 
-    from("build/docs/javadoc") // Исходная папка для упаковки
-    archiveFileName.set("javadoc.zip") // Имя создаваемого архива
-    destinationDirectory.set(layout.buildDirectory.dir("archives")) // Директория, куда будет сохранен архив
+        rule {
+            isEnabled = false
+            element = "CLASS"
+            includes = listOf("org.gradle.*")
+
+            limit {
+                counter = "LINE"
+                value = "TOTALCOUNT"
+                maximum = "0.3".toBigDecimal()
+            }
+        }
+    }
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
 
 tasks.spotbugsMain {
@@ -88,23 +101,15 @@ tasks.test {
     finalizedBy(tasks.spotbugsMain)
 }
 
-tasks.register("checkJarSize") {
-    group = "verification"
-    description = "Checks the size of the generated JAR file"
-    dependsOn("jar")
-    doLast {
-        val jarFile = file("build/libs/${project.name}-${project.version}.jar") // Путь к JAR-файлу
-        if (jarFile.exists()) {
-            val sizeInMB = jarFile.length() / (1024 * 1024) // Размер в мегабайтах
-            if (sizeInMB > 20) {
-                println("WARNING: JAR file exceeds the size limit of 5 MB. Current size: ${sizeInMB} MB")
-            } else {
-                println("JAR file is within the acceptable size limit. Current size: ${sizeInMB} MB")
-            }
-        } else {
-            println("JAR file not found. Please make sure the build process completed successfully.")
-        }
-    }
+tasks.register<Zip>("zipJavaDoc") {
+    group = "documentation" // Группа, в которой будет отображаться задача
+    description = "Packs the generated Javadoc into a zip archive"
+
+    dependsOn("javadoc") // Указываем, что задача зависит от выполнения javadoc
+
+    from("build/docs/javadoc") // Исходная папка для упаковки
+    archiveFileName.set("javadoc.zip") // Имя создаваемого архива
+    destinationDirectory.set(layout.buildDirectory.dir("archives")) // Директория, куда будет сохранен архив
 }
 
 tasks.register<Zip>("archiveResources") {
@@ -126,26 +131,27 @@ tasks.register<Zip>("archiveResources") {
     }
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.liquibase:liquibase-core:4.30.0")
+tasks.register("checkJarSize") {
+    group = "verification"
+    description = "Checks the size of the generated JAR file"
+    dependsOn("jar")
+    doLast {
+        val jarFile = file("build/libs/${project.name}-${project.version}.jar") // Путь к JAR-файлу
+        if (jarFile.exists()) {
+            val sizeInMB = jarFile.length() / (1024 * 1024) // Размер в мегабайтах
+            if (sizeInMB > 20) {
+                println("WARNING: JAR file exceeds the size limit of 5 MB. Current size: ${sizeInMB} MB")
+            } else {
+                println("JAR file is within the acceptable size limit. Current size: ${sizeInMB} MB")
+            }
+        } else {
+            println("JAR file not found. Please make sure the build process completed successfully.")
+        }
     }
 }
 
-liquibase {
-    activities.register("main") {
-        this.arguments = mapOf(
-            "logLevel"       to "info",
-            "url"            to "jdbc:postgresql://localhost:5432/job4j_devops",
-            "username"       to "postgres",
-            "password"       to "postgres",
-            "classpath"      to "src/main/resources",
-            "changelogFile"  to "db/changelog/db.changelog-master.xml"
-        )
+tasks.register("profile") {
+    doFirst {
+        println(env.DB_URL.value)
     }
-    runList = "main"
 }
-
