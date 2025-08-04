@@ -16,28 +16,35 @@ pipeline {
         stage('Check') {
             steps {
                 script {
-                    sh './gradlew check'
+                    sh './gradlew check -P"dotenv.filename"="/var/agent2/env/.env.develop"'
                 }
             }
         }
         stage('Package') {
             steps {
                 script {
-                    sh './gradlew build'
+                    sh './gradlew build -P"dotenv.filename"="/var/agent2/env/.env.develop"'
                 }
             }
         }
         stage('JaCoCo Report') {
             steps {
                 script {
-                    sh './gradlew jacocoTestReport'
+                    sh './gradlew jacocoTestReport -P"dotenv.filename"="/var/agent2/env/.env.develop"'
                 }
             }
         }
         stage('JaCoCo Verification') {
             steps {
                 script {
-                    sh './gradlew jacocoTestCoverageVerification'
+                    sh './gradlew jacocoTestCoverageVerification -P"dotenv.filename"="/var/agent2/env/.env.develop"'
+                }
+            }
+        }
+        stage('Update DB') {
+            steps {
+                script {
+                    sh './gradlew update -P"dotenv.filename"="/var/agent2/env/.env.develop"'
                 }
             }
         }
