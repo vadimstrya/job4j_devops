@@ -26,6 +26,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.assertj.core)
+    testImplementation("org.testcontainers:postgresql:1.20.4")
 
     compileOnly(libs.lombok)
 
@@ -160,4 +161,40 @@ tasks.register("profile") {
     doFirst {
         println(env.DB_URL.value)
     }
+}
+
+val integrationTest by sourceSets.creating {
+    java {
+        srcDir("src/integrationTest/java")
+    }
+    resources {
+        srcDir("src/integrationTest/resources")
+    }
+
+    // Let the integrationTest classpath include the main and test outputs
+    compileClasspath += sourceSets["main"].output + sourceSets["test"].output
+    runtimeClasspath += sourceSets["main"].output + sourceSets["test"].output
+}
+
+val integrationTestImplementation by configurations.getting {
+    extendsFrom(configurations["testImplementation"])
+}
+
+val integrationTestRuntimeOnly by configurations.getting {
+    extendsFrom(configurations["testRuntimeOnly"])
+}
+
+tasks.register<Test>("integrationTest") {
+    description = "Runs the integration tests."
+    group = "verification"
+
+    testClassesDirs = integrationTest.output.classesDirs
+    classpath = integrationTest.runtimeClasspath
+
+    // Usually run after regular unit tests
+    shouldRunAfter(tasks.test)
+}
+
+tasks.check {
+    dependsOn("integrationTest")
 }
