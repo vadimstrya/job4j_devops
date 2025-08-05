@@ -21,8 +21,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation(libs.liquibase.core)
     implementation(libs.postgresql)
+    implementation("org.springframework.kafka:spring-kafka")
 
-
+    testImplementation("org.awaitility:awaitility")
+    testImplementation("org.testcontainers:kafka:1.20.4")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.assertj.core)
