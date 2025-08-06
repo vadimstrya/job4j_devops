@@ -1,6 +1,6 @@
 package ru.job4j.devops.enums;
 
-public enum CalcEventTypes {
+public enum CalcOperations {
 
     ADDITION,
     SUBTRACTION,

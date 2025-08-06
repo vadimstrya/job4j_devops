@@ -5,13 +5,13 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.job4j.devops.enums.CalcEventTypes;
+import ru.job4j.devops.enums.CalcOperations;
 
 import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
-@Entity
+@Entity(name = "ru.job4j.devops.models.CalcEvent")
 @Table(name = "CALC_EVENTS")
 public class CalcEvent {
 
@@ -25,7 +25,7 @@ public class CalcEvent {
 
     @Column(name = "TYPE")
     @Enumerated(EnumType.STRING)
-    private CalcEventTypes type;
+    private CalcOperations type;
 
     @Column(name = "FIRST_ARG")
     private Double firstArg;
