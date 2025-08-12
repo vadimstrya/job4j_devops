@@ -7,6 +7,7 @@ plugins {
     id("com.github.spotbugs") version "6.0.26"
     id("org.liquibase.gradle") version "3.0.1"
     id("co.uzzu.dotenv.gradle") version "4.0.0"
+    id("maven-publish")
 }
 
 group = "ru.job4j.devops"
@@ -14,6 +15,10 @@ version = "1.0.0"
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("http://192.168.0.110:8081/repository/maven-public/")
+        isAllowInsecureProtocol = true
+    }
 }
 
 dependencies {
@@ -197,4 +202,22 @@ tasks.register<Test>("integrationTest") {
 
 tasks.check {
     dependsOn("integrationTest")
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            url = uri("http://192.168.0.110:8081/repository/maven-releases/")
+            isAllowInsecureProtocol = true
+            credentials {
+                username = "devops"
+                password = "devops"
+            }
+        }
+    }
 }
